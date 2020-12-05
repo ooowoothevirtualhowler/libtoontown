@@ -13,6 +13,8 @@
 #include "decalEffect.h"
 #include "config_linmath.h"
 
+#include <cctype>
+
 ////////////////////////////////////////////////////////////////////
 // Static variables
 ////////////////////////////////////////////////////////////////////
@@ -109,14 +111,21 @@ NodePath DNASignText::traverse(NodePath &parent, DNAStorage *store, int editing)
   // Check for upper case flag:
 
   if (baseline->get_flags().find('c') != std::string::npos) {
-    // We have to uppercase this carefully, allowing for encoded text.
-    TextEncoder encoder;
-    encoder.set_text(letters);
-    int num_chars = encoder.get_num_chars();
+    // The encoding actually breaks the functionality
+    // of this so we won't encode this anymore
+    //
+    // I'm gonna keep it here though because
+    // it might be needed if someone compiles this
+    // to run in a Python 2 environment
+    // TextEncoder encoder;
+    // encoder.set_text(letters);
+    // int num_chars = encoder.get_num_chars();
+    int num_chars = letters.size();
+    std::string upperletters = "";
     for (int i = 0; i < num_chars; i++) {
-      int character = encoder.get_unicode_char(i);
-      encoder.set_unicode_char(i, encoder.unicode_toupper(character));
+        upperletters += toupper(letters[i]);
     }
+    letters = upperletters;
   }
 
   // Check for drop shadow flag:
